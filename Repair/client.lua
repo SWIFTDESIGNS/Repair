@@ -13,7 +13,7 @@ RegisterNetEvent("vehicle:repair")
 AddEventHandler("vehicle:repair", function()
     local PlayerPed = GetPlayerPed(-1)
     local localVehicle = GetVehiclePedIsIn(PlayerPed, false)
-    local vehicle = GetClosestVehicle(GetEntityCoords(PlayerPed), 15.0, 0, 70)
+    local vehicle = GetCurrentTargetCar()
     if vehicle then
 	if DoesEntityExist(vehicle) then
         SetVehicleFixed(vehicle)
@@ -30,22 +30,15 @@ end)
 
 --functions
 
-function GetVehicleInDirection(coordFrom, coordTo)
-	local rayHandle = CastRayPointToPoint(coordFrom.x, coordFrom.y, coordFrom.z, coordTo.x, coordTo.y, coordTo.z, 10, GetPlayerPed(-1), 0)
-	local a, b, c, d, vehicle = GetRaycastResult(rayHandle)
-	return vehicle
-end
+function GetCurrentTargetCar()
+    local ped = GetPlayerPed(-1)
+    local coords = GetEntityCoords(ped)
+   
+    local entityWorld = GetOffsetFromEntityInWorldCoords(ped, 0.0, 120.0, 0.0)
+    local rayHandle = CastRayPointToPoint(coords.x, coords.y, coords.z, entityWorld.x, entityWorld.y, entityWorld.z, 10, ped, 0)
+    local a, b, c, d, vehicleHandle = GetRaycastResult(rayHandle)
 
-
-function GetTargetedVehicle(pCoords, ply)
-    for i = 1, 200 do
-        coordB = GetOffsetFromEntityInWorldCoords(ply, 0.0, (6.281)/i, 0.0)
-        targetedVehicle = GetVehicleInDirection(pCoords, coordB)
-        if(targetedVehicle ~= nil and targetedVehicle ~= 0)then
-            return targetedVehicle
-        end
-    end
-    return
+    return vehicleHandle
 end
 
 function notify(msg)
