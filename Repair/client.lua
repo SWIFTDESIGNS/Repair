@@ -21,7 +21,7 @@ AddEventHandler("vehicle:repair", function()
         SetVehicleAutoRepairDisabled(PlayerPedId(), true)
         notify("~y~AutoMotive Garages\n~g~Your vehicle has been repaired")
     else
-        notify("~r~You are not close enough to a vehicle")
+        notify("~r~You must be facing a vehicle for it to repair!")
     end
     end
 
